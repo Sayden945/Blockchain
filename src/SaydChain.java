@@ -1,12 +1,10 @@
-package saydchain;
-
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
 public class SaydChain {
 
-    public static ArrayList<Block> blockchain = new ArrayList<Block>(); // List of blocks
+    public static ArrayList<Block> blockchain = new ArrayList<>(); // List of blocks
     public static int mineDifficulty = 5; // Difficulty of mining
 
     public static void main(String[] args) {
