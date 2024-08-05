@@ -12,7 +12,7 @@ public class Block {
     private int nonce; //Random number used in mining
     public static int mineDifficulty = 5; //Difficulty of mining
 
-    //Block Constructor.
+    // Block Constructor.
     public Block(String data, String previousHash) {
         this.data = data;
         this.previousHash = previousHash;
@@ -20,18 +20,12 @@ public class Block {
         this.hash = calculateHash();
     }
 
-    /**
-     * Calculates the hash for the block.
-     * <p>
-     * This method uses the SHA-256 algorithm to generate a hash based on the
-     * previous block's hash, the current block's timestamp, and the block's data.
-     *
-     * @return The calculated hash as a String.
-     */
+    // Calculate new hash based on blocks contents
     public String calculateHash() {
         return StrUtil.appSha256(previousHash + Long.toString(nonce) + data);
     }
 
+    // Increases nonce value until hash target is reached.
     public void mineBlock(int mineDifficulty) {
         String target = new String(new char[mineDifficulty]).replace('\0', '0'); //Create a string with difficulty * "0"
 
