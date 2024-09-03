@@ -1,32 +1,37 @@
-import com.google.gson.GsonBuilder;
-
+import java.security.Security;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SaydChain {
 
     public static ArrayList<Block> blockchain = new ArrayList<>(); // List of blocks
     public static int mineDifficulty = 5; // Difficulty of mining
+    public static float minimumTransaction = 0.1f; // Minimum transaction amount
+    public static HashMap<String, TxOutputs> UTXOs = new HashMap<>(); // List of unspent transactions
+    public static Wallet walletA;
+    public static Wallet walletB;
 
     public static void main(String[] args) {
 
-        // Add blocks to the blockchain ArrayList
-        blockchain.add(new Block("Hey, Im the Genesis block", "0"));
-        System.out.println("Trying to mine block 1...");
-        blockchain.get(0).mineBlock(mineDifficulty); // Mine the first block
+        // Set Bouncy castle as a Security Provider
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        blockchain.add(new Block("Second block", blockchain.get(blockchain.size() - 1).hash));
-        System.out.println("Trying to mine block 2...");
-        blockchain.get(1).mineBlock(mineDifficulty); // Mine the second block
+        // Create wallets
+        walletA = new Wallet();
+        walletB = new Wallet();
 
-        blockchain.add(new Block("third block", blockchain.get(blockchain.size() - 1).hash));
-        System.out.println("Trying to mine block 3...");
-        blockchain.get(2).mineBlock(mineDifficulty); // Mine the third block
+        // Test key pairds
+        System.out.println("Private and public keys:");
+        System.out.println("Private key: " + StrUtil.getStringFromKey(walletA.privKey));
+        System.out.println("Public key: " + StrUtil.getStringFromKey(walletA.pubKey));
 
-        System.out.println("\nBlockchain is Valid: " + isValidChain());
+        // Test transaction
+        Tx tx = new Tx(walletA.pubKey, walletB.pubKey, 5, null);
+        tx.genSignature(walletA.privKey);
 
-        String bcJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-        System.out.println("Blockchain: ");
-        System.out.println(bcJson);
+        // Verify signature
+        System.out.println("Is signature verified?");
+        System.out.println(tx.verifySignature());
     }
 
     //
